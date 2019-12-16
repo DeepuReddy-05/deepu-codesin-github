@@ -1,0 +1,42 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+ Protected Sub MFG_TC_DETAIL_QA_HOLD_QTY_TextChanged(sender As Object, e As EventArgs) Handles MFG_TC_DETAIL_QA_HOLD_QTY.TextChanged
+        Try
+
+            '17OCT 2018 added by deepu
+            Dim ds As New Data.DataSet
+            Dim WO_QTY As String = String.Empty
+            dbad.SelectCommand.CommandText = "SELECT WO_QTY FROM MFG_WORK_ORDER WHERE WORK_ORDER_NO='" & MFG_TC_DETAIL_WORK_ORDER_NO.Text & "'"
+            ds1.Clear()
+            dbad.Fill(ds)
+
+            If (ds.Tables(0).Rows.Count > 0) Then
+                WO_QTY = ds.Tables(0).Rows(0)(0)
+                Dim ds2 As New Data.DataSet
+                dbad.SelectCommand.CommandText = ("select sf_get_good_qty_step_new('" & MFG_TC_DETAIL_WORK_ORDER_NO.Text & "','" & MFG_TC_DETAIL_STEP_ID.Text & "','" & ds.Tables(0).Rows(0)(0) & "') from dual")
+                ds2.Clear()
+                dbad.Fill(ds2)
+
+
+                If MFG_TC_DETAIL_QA_HOLD_QTY.Text > ds2.Tables(0).Rows(0)(0) Then
+
+                    DISPLAY_MESSAGE_44.Text = "<strong><font color='#FF0000' size='3' face='Arial'>QA Quantity Exceeding Work Order Quantity</font></strong>"
+                Else
+                    'exception_message.Text = ""
+                    DISPLAY_MESSAGE_44.Text = " "
+
+
+                    End If
+
+
+                End If
+
+
+            '17 OCT 2018 call ins ends by deepu
+
+
+
+        Catch ex As Exception
+            Call insert_sys_log("Account posting Message", ex.Message)
+        End Try
+    End Sub
