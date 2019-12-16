@@ -8,7 +8,7 @@
             Catch ex As Exception
                 Call insert_sys_log("Update_query", ex.Message)
             End Try
-        End Sub
+        End Sub 
         Public Sub Insert_query(ByVal str_insert As String)
             Try
                 dbad.InsertCommand = New OleDbCommand
