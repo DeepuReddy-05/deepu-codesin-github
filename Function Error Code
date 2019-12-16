@@ -3,7 +3,7 @@
  Protected Sub MFG_TC_DETAIL_QA_HOLD_QTY_TextChanged(sender As Object, e As EventArgs) Handles MFG_TC_DETAIL_QA_HOLD_QTY.TextChanged
         Try
 
-            '17OCT 2018 added by deepu
+            '17OCT 2018 added by deepu 
             Dim ds As New Data.DataSet
             Dim WO_QTY As String = String.Empty
             dbad.SelectCommand.CommandText = "SELECT WO_QTY FROM MFG_WORK_ORDER WHERE WORK_ORDER_NO='" & MFG_TC_DETAIL_WORK_ORDER_NO.Text & "'"
