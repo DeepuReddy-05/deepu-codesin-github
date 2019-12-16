@@ -1,0 +1,201 @@
+ <script type="text/javascript">
+ function updateParent(ctrl1,sentValue) {
+                document.getElementById(ctrl1).value = sentValue;
+                __doPostBack(ctrl1, sentValue);
+                return false;
+            }
+</script>
+
+
+
+</td>
+                      <td colspan="2" align="center">
+ <asp:Button ID="BUTTON_RET" runat="server" Text="ButtonRetrive" CssClass="btnwb1" style="display:none;"/>
+                </td>
+
+
+  If Not IsPostBack Then
+            Try
+
+                'Dim strSQLMain As String = "SELECT CUSTOMER_NO, NAME,CUSTOMER_GROUP_NO, '<a href=''##'' onClick=open_window_doc(''MOB_EMAIL_PDF.aspx?CUSTOMER_NO=' ||CUSTOMER_NO || ''')>' || EMAIL_PDF || '</a>' EMAIL_PDF ,EMAIL_EXCEL ""Email EXCEL Confirmation"" FROM V_NFM_CUSTOMER_EMAIL_OPT_CHG"
+
+
+                'Dim strSQLMain As String = "SELECT CUSTOMER_NO, NAME,CUSTOMER_GROUP_NO, '<a href=''##'' onClick=open_window_doc(''MOB_EMAIL_PDF.aspx?CUSTOMER_NO=' ||CUSTOMER_NO || ''')>' || EMAIL_PDF || '</a>' EMAIL_PDF,'<a href=''##'' onClick=open_window_doc(''MOB_EMAIL_PDF.aspx?CUSTOMER_NO=' ||CUSTOMER_NO || ''')>' || EMAIL_EXCEL || '</a>' EMAIL_EXCEL FROM V_NFM_CUSTOMER_EMAIL_OPT_CHG"
+
+
+                'Dim strSQLMain As String = "SELECT CUSTOMER_NO, NAME,CUSTOMER_GROUP_NO, '<a href=''MOB_EMAIL_PDF.ASPX?CUSTOMER_NO='|| CUSTOMER_NO ||'&RETRIVE=BUTTON_RET'' target=''_blank''>'||EMAIL_PDF|| '</a>' EMAIL_PDF,'<a href=''MOB_EMAIL_EXCEL.ASPX?CUSTOMER_NO='|| CUSTOMER_NO ||'&RETRIVE=BUTTON_RET '' target=''_blank''>'||EMAIL_EXCEL|| '</a>' EMAIL_EXCEL FROM V_NFM_CUSTOMER_EMAIL_OPT_CHG"
+                Dim strSQLMain As String = "SELECT CUSTOMER_NO, NAME,CUSTOMER_GROUP_NO, '<a href=''MOB_EMAIL_PDF.ASPX?RETRIVE=BUTTON_RET&CUSTOMER_NO='|| CUSTOMER_NO ||''' target=''_blank''>'||EMAIL_PDF|| '</a>' EMAIL_PDF,'<a href=''MOB_EMAIL_EXCEL.ASPX?RETRIVE=BUTTON_RET&CUSTOMER_NO='|| CUSTOMER_NO ||''' target=''_blank''>'||EMAIL_EXCEL|| '</a>' EMAIL_EXCEL FROM V_NFM_CUSTOMER_EMAIL_OPT_CHG"
+                BUTTON_RET.Style.Add("display", "none")
+                dbad.SelectCommand = New OleDbCommand
+                dbad.SelectCommand.CommandText = strSQLMain
+                dbad.SelectCommand.Connection = conn.getconnection
+                ds1.Clear()
+                'Response.Write(dbad.SelectCommand.CommandText)
+                If dbad.SelectCommand.Connection.State = ConnectionState.Closed Then
+                    dbad.SelectCommand.Connection.Open()
+                End If
+                dbad.Fill(ds1)
+                If dbad.SelectCommand.Connection.State = ConnectionState.Open Then
+                    dbad.SelectCommand.Connection.Close()
+                End If
+                If ds1.Tables(0).Rows.Count > 0 Then
+                    Grid.DataSource = ds1.Tables(0).DefaultView
+                    Grid.DataBind()
+                End If
+
+                Grid.SettingsPager.Mode = GridViewPagerMode.ShowPager
+                Grid.SettingsPager.PageSize = "50"
+                Grid.DataBind()
+
+                ' ASPxWebControl.RedirectOnCallback("REP_EMAIL_PDF_EXCEL.aspx")
+
+                'ASPxGridViewExporter1.WriteXlsxToResponse()
+
+            Catch ex As Exception
+                Response.Write(ex.Message)
+            End Try
+        End If
+
+
+
+
+ Public Sub data_bind()
+        Try
+
+            'Dim strSQLMain As String = "SELECT CUSTOMER_NO, NAME,CUSTOMER_GROUP_NO, '<a href=''##'' onClick=open_window_doc(''MOB_EMAIL_PDF.aspx?CUSTOMER_NO=' ||CUSTOMER_NO || ''')>' || EMAIL_PDF || '</a>' EMAIL_PDF ,EMAIL_EXCEL ""Email EXCEL Confirmation"" FROM V_NFM_CUSTOMER_EMAIL_OPT_CHG"
+
+
+            'Dim strSQLMain As String = "SELECT CUSTOMER_NO, NAME,CUSTOMER_GROUP_NO, '<a href=''##'' onClick=open_window_doc(''MOB_EMAIL_PDF.aspx?CUSTOMER_NO=' ||CUSTOMER_NO || ''')>' || EMAIL_PDF || '</a>' EMAIL_PDF,'<a href=''##'' onClick=open_window_doc(''MOB_EMAIL_PDF.aspx?CUSTOMER_NO=' ||CUSTOMER_NO || ''')>' || EMAIL_EXCEL || '</a>' EMAIL_EXCEL FROM V_NFM_CUSTOMER_EMAIL_OPT_CHG"
+
+
+            'Dim strSQLMain As String = "SELECT CUSTOMER_NO, NAME,CUSTOMER_GROUP_NO, '<a href=''MOB_EMAIL_PDF.ASPX?CUSTOMER_NO='|| CUSTOMER_NO ||'&RETRIVE=BUTTON_RET'' target=''_blank''>'||EMAIL_PDF|| '</a>' EMAIL_PDF,'<a href=''MOB_EMAIL_EXCEL.ASPX?CUSTOMER_NO='|| CUSTOMER_NO ||'&RETRIVE=BUTTON_RET '' target=''_blank''>'||EMAIL_EXCEL|| '</a>' EMAIL_EXCEL FROM V_NFM_CUSTOMER_EMAIL_OPT_CHG"
+            Dim strSQLMain As String = "SELECT CUSTOMER_NO, NAME,CUSTOMER_GROUP_NO, '<a href=''MOB_EMAIL_PDF.ASPX?RETRIVE=BUTTON_RET&CUSTOMER_NO='|| CUSTOMER_NO ||''' target=''_blank''>'||EMAIL_PDF|| '</a>' EMAIL_PDF,'<a href=''MOB_EMAIL_EXCEL.ASPX?RETRIVE=BUTTON_RET&CUSTOMER_NO='|| CUSTOMER_NO ||''' target=''_blank''>'||EMAIL_EXCEL|| '</a>' EMAIL_EXCEL FROM V_NFM_CUSTOMER_EMAIL_OPT_CHG"
+            dbad.SelectCommand = New OleDbCommand
+            dbad.SelectCommand.CommandText = strSQLMain
+            dbad.SelectCommand.Connection = conn.getconnection
+            ds1.Clear()
+            'Response.Write(dbad.SelectCommand.CommandText)
+            If dbad.SelectCommand.Connection.State = ConnectionState.Closed Then
+                dbad.SelectCommand.Connection.Open()
+            End If
+            dbad.Fill(ds1)
+            If dbad.SelectCommand.Connection.State = ConnectionState.Open Then
+                dbad.SelectCommand.Connection.Close()
+            End If
+            If ds1.Tables(0).Rows.Count > 0 Then
+                Grid.DataSource = ds1.Tables(0).DefaultView
+                Grid.DataBind()
+            End If
+
+            Grid.SettingsPager.Mode = GridViewPagerMode.ShowPager
+            Grid.SettingsPager.PageSize = "50"
+            Grid.DataBind()
+
+            ' ASPxWebControl.RedirectOnCallback("REP_EMAIL_PDF_EXCEL.aspx")
+
+            'ASPxGridViewExporter1.WriteXlsxToResponse()
+
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        End Try
+
+
+
+
+  Protected Sub BUTTON_RET_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BUTTON_RET.Click
+        Call insert_sys_log("fhjfjfgkjg", "")
+
+
+
+
+
+        Try
+
+            'Dim strSQLMain As String = "SELECT CUSTOMER_NO, NAME,CUSTOMER_GROUP_NO, '<a href=''##'' onClick=open_window_doc(''MOB_EMAIL_PDF.aspx?CUSTOMER_NO=' ||CUSTOMER_NO || ''')>' || EMAIL_PDF || '</a>' EMAIL_PDF ,EMAIL_EXCEL ""Email EXCEL Confirmation"" FROM V_NFM_CUSTOMER_EMAIL_OPT_CHG"
+
+
+            'Dim strSQLMain As String = "SELECT CUSTOMER_NO, NAME,CUSTOMER_GROUP_NO, '<a href=''##'' onClick=open_window_doc(''MOB_EMAIL_PDF.aspx?CUSTOMER_NO=' ||CUSTOMER_NO || ''')>' || EMAIL_PDF || '</a>' EMAIL_PDF,'<a href=''##'' onClick=open_window_doc(''MOB_EMAIL_PDF.aspx?CUSTOMER_NO=' ||CUSTOMER_NO || ''')>' || EMAIL_EXCEL || '</a>' EMAIL_EXCEL FROM V_NFM_CUSTOMER_EMAIL_OPT_CHG"
+
+
+            'Dim strSQLMain As String = "SELECT CUSTOMER_NO, NAME,CUSTOMER_GROUP_NO, '<a href=''MOB_EMAIL_PDF.ASPX?CUSTOMER_NO='|| CUSTOMER_NO ||'&RETRIVE=BUTTON_RET'' target=''_blank''>'||EMAIL_PDF|| '</a>' EMAIL_PDF,'<a href=''MOB_EMAIL_EXCEL.ASPX?CUSTOMER_NO='|| CUSTOMER_NO ||'&RETRIVE=BUTTON_RET '' target=''_blank''>'||EMAIL_EXCEL|| '</a>' EMAIL_EXCEL FROM V_NFM_CUSTOMER_EMAIL_OPT_CHG"
+
+            Dim strSQLMain As String = "SELECT CUSTOMER_NO, NAME,CUSTOMER_GROUP_NO, '<a href=''MOB_EMAIL_PDF.ASPX?RETRIVE=BUTTON_RET&CUSTOMER_NO='|| CUSTOMER_NO ||''' target=''_blank''>'||EMAIL_PDF|| '</a>' EMAIL_PDF,'<a href=''MOB_EMAIL_EXCEL.ASPX?RETRIVE=BUTTON_RET&CUSTOMER_NO='|| CUSTOMER_NO ||''' target=''_blank''>'||EMAIL_EXCEL|| '</a>' EMAIL_EXCEL FROM V_NFM_CUSTOMER_EMAIL_OPT_CHG"
+            BUTTON_RET.Style.Add("display", "none")
+            dbad.SelectCommand = New OleDbCommand
+            dbad.SelectCommand.CommandText = strSQLMain
+            dbad.SelectCommand.Connection = conn.getconnection
+            ds1.Clear()
+            'Response.Write(dbad.SelectCommand.CommandText)
+            If dbad.SelectCommand.Connection.State = ConnectionState.Closed Then
+                dbad.SelectCommand.Connection.Open()
+            End If
+            dbad.Fill(ds1)
+            If dbad.SelectCommand.Connection.State = ConnectionState.Open Then
+                dbad.SelectCommand.Connection.Close()
+            End If
+            If ds1.Tables(0).Rows.Count > 0 Then
+                Grid.DataSource = ds1.Tables(0).DefaultView
+                Grid.DataBind()
+            End If
+
+            Grid.SettingsPager.Mode = GridViewPagerMode.ShowPager
+            Grid.SettingsPager.PageSize = "50"
+            Grid.DataBind()
+
+            ' ASPxWebControl.RedirectOnCallback("REP_EMAIL_PDF_EXCEL.aspx")
+
+            'ASPxGridViewExporter1.WriteXlsxToResponse()
+
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        End Try
+
+
+    End Sub
+
+
+
+
+
+
+Redirecting Page check in Query String which retrive or retrive_id is getting?
+
+
+Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Try
+            dbad.SelectCommand = New OleDbCommand
+            dbad.InsertCommand = New OleDbCommand
+            dbad.UpdateCommand = New OleDbCommand
+            dbad.DeleteCommand = New OleDbCommand
+            'If (Session("user_id") = "") Then
+            '    Response.Redirect("MOB_LOGIN.ASPX")
+            'End If
+
+            Request.QueryString.Get("CUSTOMER_NO")
+            Dim cust_no As String
+
+            cust_no = Request.QueryString.Get("CUSTOMER_NO")
+            Call Update_query("update a_customer_master set EMAIL_PDF = case when NVL(EMAIL_PDF,'N') = 'Y' then 'N' else 'Y' end where customer_no = '" & Request.QueryString.Get("CUSTOMER_NO") & "' and client = 'PROD'")
+
+            Try
+                Dim strFile1 As String = "TEST"
+                Dim strCmd1 As String
+                If (Request.QueryString.Get("RETRIVE") <> "") Then
+                    strCmd1 = String.Format("window.opener.document.getElementById('" & Request.QueryString.Get("RETRIVE") & "').click();window.close();", strFile1)
+                Else
+                    strCmd1 = String.Format("window.close();", strFile1)
+                End If
+                ScriptManager.RegisterStartupScript(Me, Me.GetType(), "GEN1", strCmd1, True)
+            Catch ex As Exception
+                Call insert_sys_log("Close Button", ex.Message)
+            End Try
+
+            'Response.Redirect("REP_EMAIL_PDF_EXCEL.aspx")
+
+
+            If Not IsPostBack Then
+                Dim i As Integer
+            Else
+            End If
+        Catch ex As Exception
+        End Try
