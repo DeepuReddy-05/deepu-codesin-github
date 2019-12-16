@@ -1,0 +1,172 @@
+  Public Sub Update_query(ByVal str_update As String)
+            Try
+                dbad.UpdateCommand = New OleDbCommand
+                dbad.UpdateCommand.Connection = conn.getconnection()
+                dbad.UpdateCommand.CommandText = str_update
+                dbad.UpdateCommand.ExecuteNonQuery()
+                dbad.UpdateCommand.Connection.Close()
+            Catch ex As Exception
+                Call insert_sys_log("Update_query", ex.Message)
+            End Try
+        End Sub
+        Public Sub Insert_query(ByVal str_insert As String)
+            Try
+                dbad.InsertCommand = New OleDbCommand
+                dbad.InsertCommand.Connection = conn.getconnection()
+                dbad.InsertCommand.CommandText = str_insert
+                dbad.InsertCommand.ExecuteNonQuery()
+                dbad.InsertCommand.Connection.Close()
+            Catch ex As Exception
+                Call insert_sys_log("Insert_query", ex.Message)
+            End Try
+        End Sub
+		
+		
+		
+		
+        Public Sub Delete_query(ByVal str_delete As String)
+            Try
+                dbad.DeleteCommand = New OleDbCommand
+                dbad.DeleteCommand.Connection = conn.getconnection()
+                dbad.DeleteCommand.CommandText = str_delete
+                dbad.DeleteCommand.ExecuteNonQuery()
+                dbad.DeleteCommand.Connection.Close()
+            Catch ex As Exception
+                Call insert_sys_log("Delete_query", ex.Message)
+            End Try
+        End Sub
+		
+		
+		
+		
+        Public Function Return_record_count(ByVal str_select As String) As Integer
+            Try
+                Dim ds_new As New Data.DataSet
+                dbad.SelectCommand = New OleDbCommand
+                dbad.SelectCommand.Connection = conn.getconnection()
+                dbad.SelectCommand.CommandText = str_select
+                dbad.Fill(ds_new)
+                dbad.SelectCommand.Connection.Close()
+                If (ds_new.Tables(0).Rows.Count > 0) Then
+                    Return 1
+                Else
+                    Return 0
+                End If
+                Return 0
+            Catch ex As Exception
+                Call insert_sys_log("Return_record_count", ex.Message)
+            End Try
+        End Function
+		
+		
+		
+		
+        Public Function Return_record_set(ByVal str_select As String) As Data.DataSet
+            Try
+                Dim ds_new As New Data.DataSet
+                dbad.SelectCommand = New OleDbCommand
+                dbad.SelectCommand.Connection = conn.getconnection()
+                dbad.SelectCommand.CommandText = str_select
+                dbad.Fill(ds_new)
+                dbad.SelectCommand.Connection.Close()
+                Return ds_new
+            Catch ex As Exception
+                Call insert_sys_log("Return_record_set", ex.Message)
+            End Try
+        End Function
+
+
+		
+		
+		
+        Public Sub insert_sys_log(ByVal str1 As String, ByVal message As String)
+            Dim sterr1, sterr2, sterr3, sterr4, sterr As String
+            sterr = Replace(message, "'", "''")
+            If (Len(sterr) > 4000) Then
+                sterr1 = Mid(sterr, 1, 4000)
+                If (Len(sterr) > 8000) Then
+                    sterr2 = Mid(sterr, 4000, 8000)
+                    If (Len(sterr) > 12000) Then
+                        sterr3 = Mid(sterr, 8000, 12000)
+                        If (Len(sterr) > 16000) Then
+                            sterr4 = Mid(sterr, 12000, 16000)
+                        Else
+                            sterr4 = Mid(sterr, 12000, Len(sterr))
+                        End If
+                    Else
+                        sterr3 = Mid(sterr, 8000, Len(sterr))
+                        sterr4 = ""
+                    End If
+                Else
+                    sterr2 = Mid(sterr, 4000, Len(sterr))
+                    sterr3 = ""
+                    sterr3 = ""
+                    sterr4 = ""
+                End If
+            Else
+                sterr1 = sterr
+                sterr2 = ""
+                sterr3 = ""
+                sterr4 = ""
+            End If
+            Try
+                dbad.InsertCommand.Connection = conn.getconnection()
+                If (dbad.InsertCommand.Connection.State = Data.ConnectionState.Closed) Then
+                    dbad.InsertCommand.Connection.Open()
+                End If
+                dbad.InsertCommand.CommandText = "Insert into SYS_ACTIVATE_STATUS_LOG (LINE_NO, CHANGE_REQUEST_NO,  OBJECT_TYPE, OBJECT_NAME, ERROR_TEXT, STATUS,LOG_DATE,ERROR_TEXT1, ERROR_TEXT2, ERROR_TEXT3) values ((select nvl(max(to_number(line_no)),0)+1 from SYS_ACTIVATE_STATUS_LOG),'','OmegaCubeAPI','" & str1 & "','" & sterr1 & "','N',sysdate,'" & sterr2 & "','" & sterr3 & "','" & sterr4 & "')"
+                dbad.InsertCommand.ExecuteNonQuery()
+                dbad.InsertCommand.Connection.Close()
+            Catch ex As Exception
+            End Try
+        End Sub
+    End Class
+
+
+Public Sub Execute_SP(ByVal spName As String)
+        con = New OleDbConnection(strConnection)
+        cmd = New OleDbCommand()
+        Try
+            cmd.Connection = con
+            cmd.CommandText = spName
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.Connection.Open()
+            cmd.ExecuteNonQuery()
+            cmd.Connection.Close()
+
+        Catch ex As Exception
+            err_msg.Text = ex.Message
+            con.Close()
+            Call insert_sys_log("BOM_EXPORT_EXCEL :  Execute_SP :- ", ex.Message)
+        Finally
+            If con IsNot Nothing Then
+                con.Close()
+            End If
+        End Try
+    End Sub
+
+
+
+
+Public Function sf_execute_db_function(ByVal fname As String) As String
+        Dim s As String
+        s = ""
+
+        Dim dstruc_1 As New Data.DataSet
+        Dim dbad As New Data.OleDb.OleDbDataAdapter
+        dbad.SelectCommand = New OleDbCommand
+        dbad.SelectCommand.Connection = getconnection()
+
+        dbad.SelectCommand.CommandText = "Select " & fname & " dbfr from dual "
+        dstruc_1.Clear()
+        dbad.Fill(dstruc_1)
+        If (dstruc_1.Tables(0).Rows.Count > 0) Then
+            If Not (Equals(dstruc_1.Tables(0).Rows(0)("dbfr"), System.DBNull.Value)) Then
+                s = dstruc_1.Tables(0).Rows(0)("dbfr")
+            End If
+
+        End If
+        dbad.SelectCommand.Connection.Close()
+        dbad.Dispose()
+        Return s
+    End Function
